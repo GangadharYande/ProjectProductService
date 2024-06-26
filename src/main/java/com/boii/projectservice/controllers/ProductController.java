@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 public class ProductController {
-// ways to accept imcomming requests below
+// ways to accept incoming requests below
 
     @Autowired
     ProductService productService;
@@ -21,13 +21,13 @@ public class ProductController {
         Product products = productService.getSingleProduct(productId);
         return products;
     }
-    @GetMapping("/Products")
+    @GetMapping("/products")
     public List<Product> getAllProducts() {
         List<Product> products = productService.getAllProducts();
         return products;
     }
 
-    @GetMapping("/products")
+    @GetMapping("/search")
     // localhost:9000/products?text="mens wear"
     public List<Product> searchProducts(@RequestParam("/text") String queryText) {
         List<Product> products = productService.searchProducts(queryText);

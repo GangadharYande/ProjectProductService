@@ -1,12 +1,13 @@
 package com.boii.projectservice.services;
 
-import com.boii.projectservice.FakeStoreResponse;
+import com.boii.projectservice.dto.FakeStoreResponse;
 import com.boii.projectservice.models.Category;
 import com.boii.projectservice.models.Product;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,29 +22,46 @@ public class FakeStoreProductService implements  ProductService{
     @Override
     public Product getSingleProduct( String productId) {
 
-        FakeStoreResponse response = restTemplate.getForObject("https://fakestoreapi.com/products/" + productId, FakeStoreResponse.class);
+        FakeStoreResponse response = restTemplate.getForObject(
+                "https://fakestoreapi.com/products/"
+                + productId, FakeStoreResponse.class);
+
         Product product = new Product();
 
         product.setId(response.getId());
         product.setName(response.getTitle());
-        product.setPrice(response.getPrice()*1.0);  //  here price was store is INTEGER for response in double - converting it in double by *1.0
+        product.setPrice(response.getPrice()*1.0); // here price was store is INTEGER for response in double -converting it in double by *1.0
         product.setDescription(response.getDescription());
         product.setImageURL(response.getImage());
+        product.setDescription(response.getDescription());
 
         Category category = new Category();
         category.setName(response.getCategory());
 
-
-
-
-
-        product.setDescription(response.getDescription());
-        return null;
+        return product;
     }
 
     @Override
     public List<Product> getAllProducts() {
-        return List.of();
+        FakeStoreResponse[] responseArray = restTemplate.getForObject(
+                "https://fakestoreapi.com/products/", FakeStoreResponse[].class
+        );
+        List<Product> productList = new ArrayList<>();
+        for(FakeStoreResponse response: responseArray){
+            Product product = new Product();
+
+            product.setId(response.getId());
+            product.setName(response.getTitle());
+            product.setPrice(response.getPrice()*1.0);
+            product.setDescription(response.getDescription());
+            product.setImageURL(response.getImage());
+            product.setDescription(response.getDescription());
+
+            Category category = new Category();
+            category.setName(response.getCategory());
+            productList.add(product);
+        }
+        return productList;
     }
 
     @Override

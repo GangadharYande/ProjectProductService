@@ -1,8 +1,7 @@
-package com.boii.projectservice;
+package com.boii.projectservice.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.client.RestTemplate;
 
 // purpose ,to store the data from outside world  we use DTO (Data Transfer Objects )
 @Getter
