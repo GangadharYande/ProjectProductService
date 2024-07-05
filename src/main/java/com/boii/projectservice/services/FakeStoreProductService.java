@@ -34,7 +34,7 @@ public class FakeStoreProductService implements  ProductService{
         // 1. hit the API
         // 2. You want to structure the Object, into a particular formal -> FakeStoreResponse.class
         // 3. Convert the class Structure, to its corresponding Object -> response
-        Product product = convertResponseToProduct(response);
+        Product product = response.toProduct(); // handing   respose via FakeStoreResponseDTO
 
         return product;
     }
@@ -50,7 +50,7 @@ public class FakeStoreProductService implements  ProductService{
 
         // Converting List to ArrayList
         for(FakeStoreResponseDTO response: responseArray){
-            Product product = convertResponseToProduct(response);
+            Product product = response.toProduct();
             productList.add(product);
         }
         return productList;
@@ -73,42 +73,7 @@ public class FakeStoreProductService implements  ProductService{
                 fakeStoreRequestDTO,
                 FakeStorePOSTResponseDTO.class);
 
-            Product product = convertPOSTResponseToProduct(savedProductResponse);
+            Product product = savedProductResponse.toProduct(); // handling POST request via FakeStorePOSTResponseDTO
         return product;
     }
-
-
-    // Handling response form client server to our server Separately
-    private Product convertResponseToProduct(FakeStoreResponseDTO responseDTO){
-        Product product = new Product();
-
-        product.setId(responseDTO.getId());
-        product.setName(responseDTO.getTitle());
-        product.setDescription(responseDTO.getDescription());
-        product.setImageURL(responseDTO.getImage());
-        product.setPrice(responseDTO.getPrice()*1.0);
-
-        Category category = new Category();
-        category.setName(responseDTO.getCategory());
-        product.setCategory(category);
-
-        return product;
-    }
-
-    private Product convertPOSTResponseToProduct(FakeStorePOSTResponseDTO postResponseDTO){
-        Product product = new Product();
-
-        product.setId(postResponseDTO.getId());
-        product.setName(postResponseDTO.getTitle());
-        product.setDescription(postResponseDTO.getDescription());
-        product.setImageURL(postResponseDTO.getImage());
-        product.setPrice(postResponseDTO.getPrice()*1.0);
-
-        Category category = new Category();
-        category.setName(postResponseDTO.getCategory());
-        product.setCategory(category);
-
-        return product;
-    }
-
 }
