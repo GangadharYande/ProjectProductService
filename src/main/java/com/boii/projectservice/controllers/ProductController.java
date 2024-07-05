@@ -1,5 +1,6 @@
 package com.boii.projectservice.controllers;
 
+import com.boii.projectservice.dto.FakeStoreRequestDTO;
 import com.boii.projectservice.models.Product;
 import com.boii.projectservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,8 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product createProduct(@RequestBody Product productRecievedFromRequest) {
-        Product savedProduct = productService.createProduct(productRecievedFromRequest);
+    public Product createProduct(@RequestBody FakeStoreRequestDTO  fakeStoreRequestDTO) {
+        Product savedProduct = productService.createProduct(fakeStoreRequestDTO);
         return savedProduct;
     }
 }

@@ -4,9 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 // purpose ,to store the data from outside world  we use DTO (Data Transfer Objects )
+//  Its purpose is to accept Request form the  fakeStore API
 @Getter
 @Setter
-public class FakeStoreResponse {
+public class FakeStoreResponseDTO {
     private String id;
     private String title;
     private Integer price ;

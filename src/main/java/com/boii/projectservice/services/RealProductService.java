@@ -1,5 +1,6 @@
 package com.boii.projectservice.services;
 
+import com.boii.projectservice.dto.FakeStoreRequestDTO;
 import com.boii.projectservice.models.Product;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,11 @@ public class RealProductService implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
+        return null;
+    }
+
+    @Override
+    public Product createProduct(FakeStoreRequestDTO fakeStoreRequestDTO) {
         return null;
     }
 
