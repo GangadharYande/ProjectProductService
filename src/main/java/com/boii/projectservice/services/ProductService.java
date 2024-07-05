@@ -17,6 +17,7 @@ public interface ProductService {
 
 
     // To Create Object to  FakeStore
+    // Not the right way to code  just to run code
     Product createProduct(FakeStoreRequestDTO fakeStoreRequestDTO);
 
 }
