@@ -8,6 +8,8 @@ import com.boii.projectservice.exceptions.ProductNotFoundException;
 import com.boii.projectservice.models.Product;
 import com.boii.projectservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/products/{id}")
-    public ProductResponseDTO getSingleProduct(@PathVariable("id") String productId) throws ProductNotFoundException {
+    public ResponseEntity<ProductResponseDTO> getSingleProduct(@PathVariable("id") String productId) throws ProductNotFoundException {
         try {
 
             Product product = productService.getSingleProduct(productId);
@@ -29,7 +31,9 @@ public class ProductController {
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
             productResponseDTO.setProduct(product);
             productResponseDTO.setResponseMessage("Success");
-            return productResponseDTO;
+
+            ResponseEntity<ProductResponseDTO> responseEntity = new ResponseEntity<>(productResponseDTO , HttpStatus.OK);
+            return responseEntity;
         }
         catch (ProductNotFoundException pnfe){
             // should handle all error like nullPointer ,serverDown , product not in db etc.
@@ -37,20 +41,23 @@ public class ProductController {
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
             productResponseDTO.setProduct(null);
             productResponseDTO.setResponseMessage(pnfe.getMessage() +" Product not found");
-            return productResponseDTO;
+
+            ResponseEntity<ProductResponseDTO> responseEntity = new ResponseEntity<>(productResponseDTO , HttpStatus.INTERNAL_SERVER_ERROR);
+
+            return responseEntity;
         }
-        catch (DBNotFoundException dbnfe) {
-            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-            productResponseDTO.setProduct(null);
-            productResponseDTO.setResponseMessage(dbnfe.getMessage() + " DB not Found ");
-            return productResponseDTO;
-        }
-        catch(DBTimeOutException dbte){
-            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-            productResponseDTO.setProduct(null);
-            productResponseDTO.setResponseMessage(dbte.getMessage() + "DB timeOut ");
-            return productResponseDTO;
-        }
+//        catch (DBNotFoundException dbnfe) {
+//            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+//            productResponseDTO.setProduct(null);
+//            productResponseDTO.setResponseMessage(dbnfe.getMessage() + " DB not Found ");
+//            return productResponseDTO;
+//        }
+//        catch(DBTimeOutException dbte){
+//            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+//            productResponseDTO.setProduct(null);
+//            productResponseDTO.setResponseMessage(dbte.getMessage() + "DB timeOut ");
+//            return productResponseDTO;
+//        }
 
 
     }
