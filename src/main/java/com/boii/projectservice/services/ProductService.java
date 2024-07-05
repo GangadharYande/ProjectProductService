@@ -1,12 +1,15 @@
 package com.boii.projectservice.services;
 
 import com.boii.projectservice.dto.FakeStoreRequestDTO;
+import com.boii.projectservice.exceptions.DBNotFoundException;
+import com.boii.projectservice.exceptions.DBTimeOutException;
+import com.boii.projectservice.exceptions.ProductNotFoundException;
 import com.boii.projectservice.models.Product;
 
 import java.util.List;
 
 public interface ProductService {
-    Product getSingleProduct( String productId) throws Exception;
+    Product getSingleProduct( String productId) throws ProductNotFoundException, DBNotFoundException, DBTimeOutException;
 
     List<Product> getAllProducts();
 

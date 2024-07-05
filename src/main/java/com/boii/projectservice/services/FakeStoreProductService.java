@@ -3,6 +3,9 @@ package com.boii.projectservice.services;
 import com.boii.projectservice.dto.FakeStorePOSTResponseDTO;
 import com.boii.projectservice.dto.FakeStoreRequestDTO;
 import com.boii.projectservice.dto.FakeStoreResponseDTO;
+import com.boii.projectservice.exceptions.DBNotFoundException;
+import com.boii.projectservice.exceptions.DBTimeOutException;
+import com.boii.projectservice.exceptions.ProductNotFoundException;
 import com.boii.projectservice.models.Category;
 import com.boii.projectservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,7 @@ public class FakeStoreProductService implements  ProductService{
     // we use RestTemplate to call 3rd party APIs
 
     @Override
-    public Product getSingleProduct( String productId) throws Exception {
+    public Product getSingleProduct( String productId) throws ProductNotFoundException, DBNotFoundException, DBTimeOutException {
 
         FakeStoreResponseDTO response = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/"
@@ -34,9 +37,10 @@ public class FakeStoreProductService implements  ProductService{
         );
 
         if(response == null ){
-            throw new Exception("Product not found with id : " + productId);
+            throw new ProductNotFoundException("Product not found with id : " + productId);
         }
-
+        connectTODB();
+        executeSQLQuery();
         // 1. hitting the API
         // 2. You want to structure the Object, into a particular formal -> FakeStoreResponse.class
         // 3. Convert the class Structure, to its corresponding Object -> response
@@ -44,6 +48,14 @@ public class FakeStoreProductService implements  ProductService{
 
         return product;
     }
+    public void connectTODB() throws DBNotFoundException {
+        //
+        throw new DBNotFoundException("DB not found");
+    }
+    public void executeSQLQuery() throws DBTimeOutException, DBNotFoundException {
+        throw new DBNotFoundException("DB Stoped responding trying to Query related issue ");
+    }
+
 
     @Override
     public List<Product> getAllProducts() {

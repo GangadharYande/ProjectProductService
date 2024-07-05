@@ -2,6 +2,9 @@ package com.boii.projectservice.controllers;
 
 import com.boii.projectservice.dto.FakeStoreRequestDTO;
 import com.boii.projectservice.dto.ProductResponseDTO;
+import com.boii.projectservice.exceptions.DBNotFoundException;
+import com.boii.projectservice.exceptions.DBTimeOutException;
+import com.boii.projectservice.exceptions.ProductNotFoundException;
 import com.boii.projectservice.models.Product;
 import com.boii.projectservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,7 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/products/{id}")
-    public ProductResponseDTO getSingleProduct(@PathVariable("id") String productId) throws Exception {
+    public ProductResponseDTO getSingleProduct(@PathVariable("id") String productId) throws ProductNotFoundException {
         try {
 
             Product product = productService.getSingleProduct(productId);
@@ -28,12 +31,24 @@ public class ProductController {
             productResponseDTO.setResponseMessage("Success");
             return productResponseDTO;
         }
-        catch (Exception e){
+        catch (ProductNotFoundException pnfe){
             // should handle all error like nullPointer ,serverDown , product not in db etc.
 
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
             productResponseDTO.setProduct(null);
-            productResponseDTO.setResponseMessage(e.getMessage());
+            productResponseDTO.setResponseMessage(pnfe.getMessage() +" Product not found");
+            return productResponseDTO;
+        }
+        catch (DBNotFoundException dbnfe) {
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+            productResponseDTO.setProduct(null);
+            productResponseDTO.setResponseMessage(dbnfe.getMessage() + " DB not Found ");
+            return productResponseDTO;
+        }
+        catch(DBTimeOutException dbte){
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+            productResponseDTO.setProduct(null);
+            productResponseDTO.setResponseMessage(dbte.getMessage() + "DB timeOut ");
             return productResponseDTO;
         }
 
