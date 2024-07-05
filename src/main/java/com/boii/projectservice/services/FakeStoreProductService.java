@@ -25,13 +25,19 @@ public class FakeStoreProductService implements  ProductService{
     // we use RestTemplate to call 3rd party APIs
 
     @Override
-    public Product getSingleProduct( String productId) {
+    public Product getSingleProduct( String productId) throws Exception {
 
         FakeStoreResponseDTO response = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/"
-                + productId, FakeStoreResponseDTO.class);
+                + productId,
+                FakeStoreResponseDTO.class
+        );
 
-        // 1. hit the API
+        if(response == null ){
+            throw new Exception("Product not found with id : " + productId);
+        }
+
+        // 1. hitting the API
         // 2. You want to structure the Object, into a particular formal -> FakeStoreResponse.class
         // 3. Convert the class Structure, to its corresponding Object -> response
         Product product = response.toProduct(); // handing   respose via FakeStoreResponseDTO

@@ -6,7 +6,7 @@ import com.boii.projectservice.models.Product;
 import java.util.List;
 
 public interface ProductService {
-    Product getSingleProduct( String productId);
+    Product getSingleProduct( String productId) throws Exception;
 
     List<Product> getAllProducts();
 

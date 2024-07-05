@@ -1,6 +1,7 @@
 package com.boii.projectservice.controllers;
 
 import com.boii.projectservice.dto.FakeStoreRequestDTO;
+import com.boii.projectservice.dto.ProductResponseDTO;
 import com.boii.projectservice.models.Product;
 import com.boii.projectservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,26 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping("/products/{id}")
-    public Product getSingleProduct(@PathVariable("id") String productId) {
+    public ProductResponseDTO getSingleProduct(@PathVariable("id") String productId) throws Exception {
+        try {
 
-        Product products = productService.getSingleProduct(productId);
-        return products;
+            Product product = productService.getSingleProduct(productId);
+
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+            productResponseDTO.setProduct(product);
+            productResponseDTO.setResponseMessage("Success");
+            return productResponseDTO;
+        }
+        catch (Exception e){
+            // should handle all error like nullPointer ,serverDown , product not in db etc.
+
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+            productResponseDTO.setProduct(null);
+            productResponseDTO.setResponseMessage(e.getMessage());
+            return productResponseDTO;
+        }
+
+
     }
     @GetMapping("/products")
     public List<Product> getAllProducts() {
