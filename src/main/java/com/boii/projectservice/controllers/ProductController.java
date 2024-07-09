@@ -1,6 +1,7 @@
 package com.boii.projectservice.controllers;
 
 import com.boii.projectservice.dto.FakeStoreRequestDTO;
+import com.boii.projectservice.dto.ListProductResponseDTO;
 import com.boii.projectservice.dto.ProductResponseDTO;
 import com.boii.projectservice.exceptions.DBNotFoundException;
 import com.boii.projectservice.exceptions.DBTimeOutException;
@@ -8,11 +9,11 @@ import com.boii.projectservice.exceptions.ProductNotFoundException;
 import com.boii.projectservice.models.Product;
 import com.boii.projectservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,51 +21,31 @@ public class ProductController {
 // ways to accept incoming requests below
 
     @Autowired
+    @Qualifier("FakeStoreProductService")  // Best way to decide which bean to be used  fakeStore or Real one in this case
     ProductService productService;
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<ProductResponseDTO> getSingleProduct(@PathVariable("id") String productId) throws ProductNotFoundException {
-        try {
+    public ResponseEntity<ProductResponseDTO> getSingleProduct(@PathVariable("id") String productId) throws ProductNotFoundException, DBTimeOutException, DBNotFoundException {
+        Product product = productService.getSingleProduct(productId);
 
-            Product product = productService.getSingleProduct(productId);
-
-            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-            productResponseDTO.setProduct(product);
-            productResponseDTO.setResponseMessage("Success");
-
-            ResponseEntity<ProductResponseDTO> responseEntity = new ResponseEntity<>(productResponseDTO , HttpStatus.OK);
-            return responseEntity;
-        }
-        catch (ProductNotFoundException pnfe){
-            // should handle all error like nullPointer ,serverDown , product not in db etc.
-
-            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-            productResponseDTO.setProduct(null);
-            productResponseDTO.setResponseMessage(pnfe.getMessage() +" Product not found");
-
-            ResponseEntity<ProductResponseDTO> responseEntity = new ResponseEntity<>(productResponseDTO , HttpStatus.INTERNAL_SERVER_ERROR);
-
-            return responseEntity;
-        }
-//        catch (DBNotFoundException dbnfe) {
-//            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-//            productResponseDTO.setProduct(null);
-//            productResponseDTO.setResponseMessage(dbnfe.getMessage() + " DB not Found ");
-//            return productResponseDTO;
-//        }
-//        catch(DBTimeOutException dbte){
-//            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-//            productResponseDTO.setProduct(null);
-//            productResponseDTO.setResponseMessage(dbte.getMessage() + "DB timeOut ");
-//            return productResponseDTO;
-//        }
+        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+        productResponseDTO.setProduct(product);
+        productResponseDTO.setResponseMessage("Success");
+        ResponseEntity<ProductResponseDTO> responseEntity = new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
+        return responseEntity;
 
 
     }
+
     @GetMapping("/products")
-    public List<Product> getAllProducts() {
+    public ResponseEntity<ListProductResponseDTO> getAllProducts() {
+
         List<Product> products = productService.getAllProducts();
-        return products;
+        ListProductResponseDTO responseDTO = new ListProductResponseDTO();
+        responseDTO.setProductList(products);
+        responseDTO.setResponseMessage("Success");
+        ResponseEntity<ListProductResponseDTO> responseEntity = new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        return responseEntity;
     }
 
     @GetMapping("/search")
@@ -75,7 +56,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product createProduct(@RequestBody FakeStoreRequestDTO  fakeStoreRequestDTO) {
+    public Product createProduct(@RequestBody FakeStoreRequestDTO fakeStoreRequestDTO) {
         Product savedProduct = productService.createProduct(fakeStoreRequestDTO);
         return savedProduct;
     }
