@@ -2,6 +2,8 @@ package com.boii.projectservice.services;
 
 import com.boii.projectservice.dto.FakeStoreRequestDTO;
 import com.boii.projectservice.models.Product;
+import com.boii.projectservice.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,10 @@ import java.util.List;
 @Service
 @Qualifier("RealProductService")
 public class RealProductService implements ProductService {
+
+    @Autowired
+    ProductRepository productRepository;
+
 
     @Override
     public Product getSingleProduct(String productId) {
