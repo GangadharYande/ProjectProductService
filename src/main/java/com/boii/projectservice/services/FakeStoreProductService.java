@@ -9,6 +9,7 @@ import com.boii.projectservice.exceptions.ProductNotFoundException;
 import com.boii.projectservice.models.Category;
 import com.boii.projectservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Primary
+@Qualifier("FakeStoreProductService")
 public class FakeStoreProductService implements  ProductService{
 
     // This has hit the APIs of FakeStore
@@ -28,7 +29,7 @@ public class FakeStoreProductService implements  ProductService{
     // we use RestTemplate to call 3rd party APIs
 
     @Override
-    public Product getSingleProduct( String productId) throws ProductNotFoundException {
+    public Product getSingleProduct( String productId) throws ProductNotFoundException, DBNotFoundException, DBTimeOutException {
 
         FakeStoreResponseDTO response = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/"
@@ -41,14 +42,14 @@ public class FakeStoreProductService implements  ProductService{
         }
 
 
-//        connectTODB();
-//        executeSQLQuery();
+        connectTODB();
+        executeSQLQuery();
 
 
         // 1. hitting the API
         // 2. You want to structure the Object, into a particular formal -> FakeStoreResponse.class
         // 3. Convert the class Structure, to its corresponding Object -> response
-        Product product = response.toProduct(); // handing   respose via FakeStoreResponseDTO
+        Product product = response.toProduct(); // handing   response via FakeStoreResponseDTO
 
         return product;
     }
@@ -65,7 +66,7 @@ public class FakeStoreProductService implements  ProductService{
     public List<Product> getAllProducts() {
         // Hitting the API
         FakeStoreResponseDTO[] responseArray = restTemplate.getForObject(
-                "https://fakestoreapi.com/products/", FakeStoreResponseDTO[].class
+                "https://fakestoreapi.com/productssss", FakeStoreResponseDTO[].class
         );
         // Storing all products in List
         List<Product> productList = new ArrayList<>();

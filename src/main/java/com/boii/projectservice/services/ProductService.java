@@ -9,7 +9,7 @@ import com.boii.projectservice.models.Product;
 import java.util.List;
 
 public interface ProductService {
-    Product getSingleProduct( String productId) throws ProductNotFoundException;
+    Product getSingleProduct( String productId) throws ProductNotFoundException, DBNotFoundException, DBTimeOutException;
 
     List<Product> getAllProducts();
 
