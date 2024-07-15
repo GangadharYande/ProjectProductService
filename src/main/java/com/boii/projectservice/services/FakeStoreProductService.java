@@ -49,7 +49,7 @@ public class FakeStoreProductService implements  ProductService{
         // 1. hitting the API
         // 2. You want to structure the Object, into a particular formal -> FakeStoreResponse.class
         // 3. Convert the class Structure, to its corresponding Object -> response
-        Product product = response.toProduct(); // handing   respose via FakeStoreResponseDTO
+        Product product = response.toProduct(); // handing   response via FakeStoreResponseDTO
 
         return product;
     }

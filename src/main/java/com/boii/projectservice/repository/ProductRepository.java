@@ -1,24 +1,27 @@
 package com.boii.projectservice.repository;
 
-import com.boii.projectservice.models.Category;
 import com.boii.projectservice.models.Product;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.boii.projectservice.services.ProductService;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, String> {
+public class ProductRepository {
 
-    public List<Product> getALlProducts();
+    public Product save(Product product){
+        // Connect to MySQL DB
+        // Execute the Query , insert into products () values()
 
-    Product getProductById(String productId);
-    List<Product> getAllByPriceGreaterThan(Double price);
-    // Select * from products where price > price
+        return null;
 
-    List<Product> getAllByNameLike(String text);
-    // Select * From products Where Name Like '%temp%'
+    }
 
-    List<Product> getAllByNameLikeAndPriceLessThan(String text, Double price, Category category);
+    public List<Product> getAllProducts(){
+        // connect To DB
+        // Execute the Query , select * from products
+
+        return  new ArrayList<Product>();
+    }
 }
